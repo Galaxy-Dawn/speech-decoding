@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="LOGO.png" alt="Project logo" width="100%"/>
+
 # Towards Unified Brain-to-Text Decoding Across Speech Production and Perception
 
 <p>
