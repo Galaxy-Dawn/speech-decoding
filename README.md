@@ -1,6 +1,17 @@
+<div align="center">
+
 # Towards Unified Brain-to-Text Decoding Across Speech Production and Perception
 
-> Code repository for a unified brain-to-text decoding pipeline spanning speech production and speech perception.
+<p>
+  <a href="https://github.com/Galaxy-Dawn/speech-decoding/stargazers"><img src="https://img.shields.io/github/stars/Galaxy-Dawn/speech-decoding?style=flat-square&color=yellow" alt="Stars"/></a>
+  <a href="https://github.com/Galaxy-Dawn/speech-decoding/network/members"><img src="https://img.shields.io/github/forks/Galaxy-Dawn/speech-decoding?style=flat-square" alt="Forks"/></a>
+  <img src="https://img.shields.io/github/last-commit/Galaxy-Dawn/speech-decoding?style=flat-square" alt="Last Commit"/>
+  <img src="https://img.shields.io/github/discussions/Galaxy-Dawn/speech-decoding?style=flat-square" alt="Discussions"/>
+</p>
+
+<strong>Language</strong>: <a href="README.md">English</a> | <a href="README.zh-CN.md">中文</a>
+
+</div>
 
 ## Overview
 
@@ -254,6 +265,7 @@ python run/train.py dataset.task=listening_final training.num_train_epochs=100
 
 - **Raw sEEG data is not bundled** in this repository.
 - The repository includes only a small **demo text corpus** at `data/demo_corpus_for_post_training.json`.
+- Subject identifiers in the released code are anonymized as `S1`-`S12`.
 - Generated experiment outputs under `src/llm/LLaMA-Factory/outputs/` are ignored from version control.
 
 ## Acknowledgements
