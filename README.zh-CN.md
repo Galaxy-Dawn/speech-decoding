@@ -6,7 +6,6 @@
   <a href="https://github.com/Galaxy-Dawn/speech-decoding/stargazers"><img src="https://img.shields.io/github/stars/Galaxy-Dawn/speech-decoding?style=flat-square&color=yellow" alt="Stars"/></a>
   <a href="https://github.com/Galaxy-Dawn/speech-decoding/network/members"><img src="https://img.shields.io/github/forks/Galaxy-Dawn/speech-decoding?style=flat-square" alt="Forks"/></a>
   <img src="https://img.shields.io/github/last-commit/Galaxy-Dawn/speech-decoding?style=flat-square" alt="Last Commit"/>
-  <img src="https://img.shields.io/github/discussions/Galaxy-Dawn/speech-decoding?style=flat-square" alt="Discussions"/>
 </p>
 
 <strong>Language</strong>: <a href="README.md">English</a> | <a href="README.zh-CN.md">中文</a>
