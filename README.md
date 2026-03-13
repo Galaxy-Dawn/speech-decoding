@@ -1,295 +1,271 @@
-# README of the source data
+# Towards Unified Brain-to-Text Decoding Across Speech Production and Perception
 
-Our source data includes two parts: 1) the numerical results in the manuscript, which are compiled into an Excel file (Supplementary Tables.xlsx); 2) the code implementation of our framework proposed in the manuscript, which is organized into the directory `./Source Code`.
+> Code repository for a unified brain-to-text decoding pipeline spanning speech production and speech perception.
 
-## Demonstration of supplementary tables
+## Overview
 
-We provide all relevant numerical results from the manuscript compiled into an Excel file (Supplementary Tables.xlsx). Below, we describe the contents of each sheet in detail.
+This repository contains the codebase for **Towards Unified Brain-to-Text Decoding Across Speech Production and Perception**.
+It organizes the full experimental workflow from neural data preprocessing to sentence-level decoding and analysis, with shared infrastructure across production and perception settings.
 
-* Chance level: In the contribution analysis, we compute the relative improvement of the decoding performance over chance level.  We estimated the chance level of the classification task by randomly sampling labels according to the class distribution as weights and repeating the process 5000 times. In this sheet, we provide the results of F1 score chance level of the validation set and the accuracy chance level of the test set for each participant.
-* Channel contribution (speaking)/Channel contribution (listening): These two sheets provide the detailed results of all channels of each participant in the speaking and listening tasks, respectively. For each task, classification target, participant, and channel, we performed inference 10 times using 10 different random seeds.
-* Response latency: This sheet provides the results of the correlation and response latency analysis in the manuscript. For each channel with stable latency, we reported the maximum correlation and corresponding time lags on each syllable.
-* Initial-final classification: This sheet provides the initial and final classification results of the four brain decoders (NeuroSketch, ModernTCN, Medformer and MultiResGRU) in the speaking and listening tasks on all participants. We reported the accuracy and F1 score. We performed inference 10 times using 10 different random seeds.
-* Epsilon rank ratio: This sheet provides the epsilon rank ratios of each layer of the four brain decoders in the speaking task.
-* OOD syllable: This sheet provides the accuracy of in-domain and out-of-domain syllables in participants S11 and S12, whose experimental corpus contained out-of-domain syllables. We performed inference 10 times using 10 different random seeds.
-* Beam search: This sheet provides the beam search candidates quality measurements of the four brain decoders in the speaking and listening tasks on all participants. We reported the exact match probability (EMP) and the distribution of the proportion of the syllable error rates (SER). We performed inference 10 times using 10 different random seeds.
-* Syllable-to-sentence (ours): This sheet provides the sentence decoding results of our LLM using three-stage post-training and two-stage inference based on Qwen2.5-7B-Instruct on all participants. We reported the CER. We performed inference 10 times using 10 different random seeds.
-* Syllable-to-sentence (others): This sheet provides the sentence decoding results of the tested LLMs in the manuscript, including small- and medium-sized LLMs (Qwen2.5-7B-Instruct and Qwen2.5-72B-Instruct) and large commercial LLMs (Qwen-3 Max, Deepseek-v3.2-exp, Doubao-1.6, GPT-5-chat-latest, grok-4-fast and Llama 3.1). We reported the CER. We performed inference 10 times using 10 different random seeds.
-* Syllable-to-sentence (ablation): This sheet provides the sentence decoding results of the methods in the ablation study. We reported the CER. We performed inference 10 times using 10 different random seeds.
-* Decoding with tone: This sheet provides the results of the tone decoding (accuracy and F1 score) and the beam search candidates quality (EMR and the distribution of the proportion of the SER) using tone information in the speaking and listening tasks. We performed inference 10 times using 10 different random seeds.
+The repository includes:
 
-## Demonstration of source code
+- **Data preparation** for subject-specific speech-decoding datasets
+- **Channel contribution analysis** for selecting informative electrodes
+- **Four brain decoders**: `NeuroSketch`, `ModernTCN`, `MedFormer`, and `MultiResGRU`
+- **LLM-based syllable-to-sentence reconstruction** built on a vendored copy of `LLaMA-Factory`
+- **Post-hoc analysis scripts** for rank analysis and response-latency analysis
 
-We provide code implementation in directory `./Source Code`. Below, we describe these source files in detail.
+This README is written as a code-first guide for reproducing, understanding, and extending the repository.
 
-## 1. System Requirements
+## Highlights
 
-### 1.1 Software Dependencies and Version Requirements
+- **Unified workflow across speech production and perception**
+- **End-to-end pipeline** from raw neural data preprocessing to sentence-level decoding
+- **Multiple decoder backbones** for controlled model comparison
+- **Hydra-based configuration** for training, inference, and analysis
+- **LLM training/inference pipeline** under `run/pipeline/llm/`
+- **Included demo corpus** for the text-side post-training workflow: `data/demo_corpus_for_post_training.json`
+- **Anonymized subject IDs** (`S1`-`S12`) in the released code
 
-| Dependency                  | Version Requirement    | Purpose                                    |
-|-----------------------------|------------------------|--------------------------------------------|
-| Python                      | $\geq$3.11             | Runtime Environment                        |
-| accelerate                  | $\geq$1.12.0           | LLM Training Acceleration                  |
-| einops                      | $\geq$0.8.1            | Tensor Operations                          |
-| fire                        | $\geq$0.7.1            | Command Line Tool                          |
-| hydra-core                  | $\geq$1.3.2            | Configuration Management                   |
-| jieba                       | $\geq$0.42.1           | Chinese Word Segmentation                  |
-| matplotlib                  | $\geq$3.10.8           | Visualization                              |
-| nltk                        | $\geq$3.9.2            | Natural Language Processing                |
-| numpy                       | $\geq$2.4.0            | Numerical Computation                      |
-| omegaconf                   | $\geq$2.3.0            | Configuration Processing                   |
-| opencc-python-reimplemented | $\geq$0.1.7            | Chinese Simplified-Traditional Conversion  |
-| pandas                      | $\geq$2.3.3            | Data Processing                            |
-| psutil                      | $\geq$7.2.0            | System Information                         |
-| pypinyin                    | $\geq$0.55.0           | Chinese Pinyin Conversion                  |
-| python-box                  | $\geq$7.3.2            | Dictionary Operations                      |
-| python-levenshtein          | $\geq$0.27.3           | String Similarity                          |
-| regex                       | $\geq$2025.11.3        | Regular Expressions                        |
-| rouge-chinese               | $\geq$1.0.3            | Chinese ROUGE Score                        |
-| scikit-learn                | $\geq$1.8.0            | Machine Learning Algorithms                |
-| speechbrain                 | $\geq$1.0.3            | Speech Processing                          |
-| timm                        | $\geq$1.0.22           | Vision Model Library                       |
-| torch                       | ==2.4.1                | Deep Learning Framework                    |
-| torchaudio                  | ==2.4.1                | Audio Processing                           |
-| tqdm                        | $\geq$4.67.1           | Progress Bar                               |
-| transformers                | $\geq$4.57.3           | Pre-trained Model Library                  |
-| pinyin2hanzi                | $\geq$0.1.1            | Chinese Pinyin to Hanzi Conversion         |
+## Quick Navigation
 
-### 1.2 Operating System Requirements
+| Section | What it covers |
+| --- | --- |
+| [Repository Layout](#repository-layout) | Main folders and responsibilities |
+| [Requirements](#requirements) | Software and hardware assumptions |
+| [Installation](#installation) | Environment setup with `uv` |
+| [Before You Run Anything](#before-you-run-anything) | Path assumptions and local config |
+| [Quick Start](#quick-start) | Minimal runnable entry points |
+| [Full Pipeline](#full-pipeline) | End-to-end workflow |
+| [Configuration](#configuration) | Hydra overrides and config locations |
+| [Data Notes](#data-notes) | What is and is not included |
 
-- **Recommended Operating System**: Linux
-- **Tested Versions**: Ubuntu 22.04 LTS
-- **Other Requirements**: 
-  - Supports CUDA 11.8+ (for GPU acceleration)
-  - Minimum 40GB GPU memory, 80GB+ recommended
-  - Minimum 50GB disk space
+## Repository Layout
 
-## 2. Installation Guide
-
-### 2.1 Installation Steps
-
-#### Step 1: Install uv Dependency Management Tool
-
-```bash
-# Install uv
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Add uv to PATH (if not already added)
-export PATH="$HOME/.cargo/bin:$PATH"
+```text
+.
+├── data/
+│   └── demo_corpus_for_post_training.json   # demo text corpus for the LLM stage
+├── run/
+│   ├── analyze/                             # analysis scripts
+│   ├── conf/                                # Hydra configs
+│   ├── pipeline/                            # bash/python pipeline entrypoints
+│   │   ├── brain_decoder/
+│   │   ├── channel_contribution/
+│   │   └── llm/
+│   ├── prepare_data/                        # preprocessing scripts
+│   └── train.py                             # main training/inference entrypoint
+├── src/
+│   ├── data_module/                         # dataset, collator, metrics, augmentation
+│   ├── model_module/brain_decoder/          # model implementations
+│   ├── utils/                               # training and logging helpers
+│   └── llm/LLaMA-Factory/                   # vendored LLaMA-Factory snapshot
+├── pyproject.toml
+└── uv.lock
 ```
 
-#### Step 2: Clone the Repository
+## Requirements
 
-#### Step 3: Configure Environment with uv
+### Software
+
+- Python **>= 3.11**
+- PyTorch **2.4.1**
+- Hydra **1.3.2**
+- `uv` for dependency management
+
+Dependencies are pinned in `pyproject.toml` and `uv.lock`.
+
+### Hardware
+
+Recommended environment:
+
+- Linux (tested on Ubuntu 22.04 style environments)
+- CUDA-capable GPU for model training/inference
+- LLM training typically benefits from **40 GB+ GPU memory**
+- Multi-GPU setups are assumed by several batch scripts
+
+## Installation
 
 ```bash
-# Create virtual environment and install dependencies based on uv.lock
+git clone https://github.com/Galaxy-Dawn/speech-decoding.git
+cd speech-decoding
 uv sync
-
-# Activate the virtual environment
 source .venv/bin/activate
 ```
 
-#### Step 4: Install LLaMA-Factory Framework
+## Before You Run Anything
+
+### 1. Configure local paths
+
+Edit:
+
+- `run/conf/dir/local.yaml`
+
+At minimum, set the directories for your local environment:
+
+- `data_dir`
+- `processed_dir`
+- `logging_dir`
+- `model_save_dir`
+- `llm_save_dir`
+- `llm_utils_dir`
+- `llm_inference_result_dir`
+- `analyze_result_dir`
+
+### 2. Check the project-root assumption
+
+Several shell scripts currently hardcode:
 
 ```bash
-# Clone LLaMA-Factory to the specified directory
-mkdir -p src/llm
-cd src/llm
-git clone https://github.com/hiyouga/LLaMA-Factory.git
-cd ../..
-
-# Install LLaMA-Factory dependencies
-uv add -r src/llm/LLaMA-Factory/requirements.txt
+PROJECT_DIR='Speech_Decoding'
 ```
 
-### 2.2 Installation Duration
+If your checkout directory is **not** named `Speech_Decoding`, choose one of the following:
 
-On a standard desktop computer (Macbook Air with M4 chip), the typical duration to complete the entire installation process is approximately:
+- rename the local folder to `Speech_Decoding`, or
+- edit the `PROJECT_DIR` variable in the scripts under `run/pipeline/**`, and align `run/conf/dir/local.yaml`
 
-- uv installation: ~1 minute
-- Dependency installation: ~10 minutes
-- LLaMA-Factory installation: ~5 minutes
+Without this step, the bash entrypoints may fail even if the Python environment is correct.
 
-Total: ~16 minutes
+## Quick Start
 
-## 3. Demo
-
-### 3.1 Demo Operation Steps
-
-#### Step 1: Ensure the Environment is Activated
+### Option A: Prepare one subject
 
 ```bash
-source .venv/bin/activate
+bash run/pipeline/prepare_data.sh subject_id=S1
 ```
 
-#### Step 2: Supplement the folder name in run/conf/dir/local.yaml
+This generates subject-specific dataset config and processed data for the selected subject.
 
-#### Step 3: Execute the Demo Script
+### Option B: Run the LLM demo workflow
 
 ```bash
-# Execute the demo script
 bash run/pipeline/llm/training/training_llm_demo.sh
 ```
 
-### 3.2 Demo Script Description
+This demo uses the included text-side demo corpus and runs:
 
-The `training_llm_demo.sh` script executes the following workflow:
+1. translation/listwise training-data generation
+2. translation-stage training
+3. listwise-stage training
+4. correction-data generation
+5. correction-stage training
 
-1. Generate translation and listwise training data using demo data
-2. Train the translation model
-3. Train the listwise model
-4. Generate correction training data
-5. Train the correction model
-
-### 3.3 Expected Output Results
-
-| Stage                      | Expected Metrics                                             | Result Format                                                |
-| -------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| Data Generation            | Generated training data volume                               | Console output of data counts, data files                    |
-| Translation Model Training | Training loss, validation loss, CER| Log files and model checkpoints |
-| Listwise Model Training    | Training loss, validation loss, CER | Log files and model checkpoints |
-| Correction Model Training  | Training loss, validation loss, CER | Log files and model checkpoints |
-
-### 3.4 Demo Runtime Duration
-We utilized an AMD EPYC 7663 56-core processor and a NVIDIA A100 GPU with 80GB of memory. The expected runtime for the demo on this configured server is approximately:
-
-- Data generation: ~2 minutes
-- Translation model training: ~30 minutes
-- Listwise model training: ~30 minutes
-- Correction model training: ~30 minutes
-
-Total: ~92 minutes
-
-## 4. Complete Workflow
-
-1. Data preparation and configuration
-
-  - Supplement the folder name in run/conf/dir/local.yaml.
-  - bash `run/pipeline/prepare_data.sh`
-
-2. Calculation of channel contribution (train → infer → summarize)
-
-  - bash `run/pipeline/channel_contribution/training_all_channel_contribution.sh`
-  - bash `run/pipeline/channel_contribution/inference_all_channel_contribution.sh`
-  - python `run/pipeline/channel_contribution/summarize/channel_results.py`
-
-3. Brain decoders with aggregated high-contribution channels
-
-  - bash `run/pipeline/brain_decoder/training_brain_decoder.sh`
-  - bash `run/pipeline/brain_decoder/inference_brain_decoder.sh`
-
-4. LLM three-stage fine-tuning (use LLaMA-Factory[https://github.com/hiyouga/LLaMA-Factory])
-
-  - **Clone [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory) to: src/llm/LLaMA-Factory**
-  - Download the training data in [Google drive](https://drive.google.com/drive/folders/1VJ1h7zHHlWWonCYWWApovxkOxMlX5FVN?usp=sharing).
-  - Use the `run/pipeline/llm/training/training_llm.sh` for training LLM models (translation, listwise, correction).
-
-5. Inference and evaluation (two-stage)
-
-  - bash `run/pipeline/llm/inference/inference_brain_stage.sh`          (no-tone classification + beam search)
-  - bash `run/pipeline/llm/inference/inference_brain_stage_with_tone.sh` (tone classification + beam search)
-  - bash `run/pipeline/llm/inference/inference_baseline.sh`       (IME-style baseline, computes sentence-level CER)
-  - bash `run/pipeline/llm/inference/inference_llm_stage.sh`             (two-stage inference, computes sentence-level CER)
-
-6. Analysis
-   Rank analysis of the four brain decoders and correlation between speaking/listening time delays: `run/analyze`
-
-Notes:
-
-- All scripts load configurations via Hydra (run/conf). You can override keys from the command line, e.g., dataset=speech_decoding_S1.
-- Run scripts from the repository root to ensure relative paths resolve correctly.
-
-## 5. Directory Structure
-
-```
-├── run/
-│   ├── pipeline/            # Main workflow scripts
-│   ├── analyze/             # Analysis scripts
-│   ├── conf/                # Hydra configuration files
-│   └── prepare_data/        # Data preparation scripts
-├── src/
-│   ├── data_module/         # Data module
-│   ├── model_module/        # Brain decoder model implementations
-│   ├── utils/               # Utility functions
-│   └── llm/                 # LLM-related code
-│       └── LLaMA-Factory/   # LLaMA-Factory framework
-├── data/                    # Data directory
-├── pyproject.toml           # Project configuration
-├── uv.lock                  # Dependency lock file
-```
-
-This is a brief overview. For a more detailed file description, please see below.
-
-- run/
-  - pipeline/
-    - train.py: the code for training brain decoders
-    - prepare_data.sh: data configuration and preprocessing
-    - channel_contribution/
-      - training_all_channel_contribution.sh: train single-channel models
-      - inference_all_channel_contribution.sh: run inference for single-channel models
-      - summarize_channel_results.py: compute average F1 and write high-contribution channels back to the dataset configuration
-    - brain_decoder/
-      - training_brain_decoder.sh: train four brain decoders with aggregated high-contribution channels
-      - inference_brain_decoder.sh: inference for the brain decoders
-    - llm/
-      - training/:
-        - training_llm.sh: a script to run all procedures
-        - data_preprocessing.py: preprocess nlpcc and sighan2015 data for LLM training
-        - get_translation_and_listwise_training_data.py: prepare translation and listwise training data
-        - get_correction_training_data.py: prepare correction training data
-        - training_translation.sh: train translation model with LLaMA-Factory
-        - training_listwise.sh: train listwise model with LLaMA-Factory
-        - training_correction.sh: train correction model with LLaMA-Factory
-      - inference/
-        - inference_brain_stage.sh: no-tone classification + beam search
-        - inference_brain_stage_with_tone.sh: tone classification + beam search
-        - inference_llm_stage.sh: two-stage inference, outputs sentence-level CER
-        - inference_baseline.sh: IME-style baseline, outputs sentence-level CER
-  - analyze/: rank analysis for the four brain decoders; correlation analysis of speaking/listening time delays
-  - conf/: Hydra configurations for project structure, preprocessing, training, inference, and analysis
-  - prepare_data/
-    - generate_yaml.py: generate dataset configuration (subject ID, number of channels, electrode names, etc.) from raw data and save to run/conf/dataset
-    - prepare_data.py: preprocess raw data to be used for training and inference
-
-- src/
-  - data_module/: The data_module provides reusable dataset components—train, eval, and test splits—along with a data_collator for batch collation that aligns inputs with model requirements, and a compute_metrics utility for evaluation (e.g., F1, accuracy), offering a standardized interface for training, validation, and testing workflows.
-  - model_module/: Implementations of the four brain decoders
-  - utils/: Utilities and training helpers
-    - aux_func.py: It reports trainable parameter counts, normalizes metric keys by replacing the eval_ prefix with test_, verifies third‑party package availability and versions, and supports batch dynamic imports to automatically register components.
-    - summarize_channel_results.py: summarize channel contributions (F1 improvement%), export Excel details and channel list
-    - get_callback.py: SWACallback, EMACallback, EarlyStoppingCallback, AveragingCheckpointCallback
-    - get_act.py: ReLU, GELU, SiLU, Mish, HardSwish
-    - get_optimizer.py: Muon, Adan, AdamW
-    - get_scheduler.py: learning rate schedulers (e.g., linear warmup + cosine decay)
-    - log.py: experiment logging helpers
-    - get_checkpoint_aggregation.py: average multiple checkpoints
-    - get_sentence_inference_results.py: aggregate results and compute CER
-  - llm/
-    - LLaMA-Factory/: clone the LLaMA-Factory repository here
-
-## 6. Configuration Management
-
-All scripts load configurations via Hydra (located in `run/conf/` directory). You can override configuration items from the command line, for example:
+### Option C: Run a single Hydra command directly
 
 ```bash
-bash run/pipeline/brain_decoder/training_brain_decoder.sh dataset=speech_decoding_S1
+python run/train.py \
+  training.do_train=True \
+  training.do_predict=True \
+  model=NeuroSketch \
+  dataset=speech_decoding_S1 \
+  dataset.id=S1 \
+  dataset.task=speaking_initial
 ```
 
-## 7. Notes
+This is often the easiest way to debug one experiment before launching the larger bash pipelines.
 
-1. All scripts should be run from the repository root to ensure relative paths resolve correctly
-2. Ensure all dependencies are installed before first run
-3. LLM training requires a significant amount of GPU memory, it is recommended to use a GPU with at least 40GB
+## Full Pipeline
 
-## 8. Acknowledgements
+### 1. Data preparation
 
-- [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory): LLM fine-tuning training framework
-- [NeuroSketch](https://github.com/Galaxy-Dawn/NeuroSketch): 2D CNN-based neural decoding model
-- [ModernTCN](https://github.com/luodhhh/ModernTCN): 1D CNN-based temporal convolutional network
-- [MedFormer](https://github.com/DL4mHealth/Medformer): Attention-based Transformer for medical time-series analysis
-- [MultiResGRU](https://www.kaggle.com/competitions/tlvmc-parkinsons-freezing-gait-prediction/writeups/zinxira-4th-place-solution-a-multilayer-bidirectio): RNN-based GRU architecture
+```bash
+bash run/pipeline/prepare_data.sh
+# or
+bash run/pipeline/prepare_data.sh subject_id=S1,S2
+```
 
-## 9. License
+### 2. Channel contribution analysis
 
-[MIT License](LICENSE)
+Train per-channel models:
+
+```bash
+bash run/pipeline/channel_contribution/training_all_channel_contribution.sh
+```
+
+Run inference and summarize channel scores:
+
+```bash
+bash run/pipeline/channel_contribution/inference_all_channel_contribution.sh
+python run/pipeline/channel_contribution/summarize_channel_results.py
+```
+
+### 3. Brain decoder training and inference
+
+Train the four brain decoders using selected channels:
+
+```bash
+bash run/pipeline/brain_decoder/training_brain_decoder.sh
+bash run/pipeline/brain_decoder/inference_brain_decoder.sh
+```
+
+Supported decoders:
+
+- `NeuroSketch`
+- `ModernTCN`
+- `MedFormer`
+- `MultiResGRU`
+
+### 4. LLM post-training
+
+```bash
+bash run/pipeline/llm/training/training_llm.sh
+```
+
+### 5. LLM inference
+
+```bash
+bash run/pipeline/llm/inference/inference_brain_stage.sh
+bash run/pipeline/llm/inference/inference_brain_stage_with_tone.sh
+bash run/pipeline/llm/inference/inference_baseline.sh
+bash run/pipeline/llm/inference/inference_llm_stage.sh
+```
+
+### 6. Analysis
+
+```bash
+python run/analyze/analyze_rank.py
+python run/analyze/response_latency_analysis.py
+```
+
+## Configuration
+
+This project uses **Hydra** for experiment management.
+
+Key config directories:
+
+- `run/conf/train.yaml`
+- `run/conf/analyze.yaml`
+- `run/conf/prepare_data.yaml`
+- `run/conf/llm_training.yaml`
+- `run/conf/llm_inference.yaml`
+- `run/conf/brain_decoder/*.yaml`
+- `run/conf/dataset/*.yaml`
+- `run/conf/dir/local.yaml`
+
+Example override patterns:
+
+```bash
+python run/train.py model=ModernTCN dataset=speech_decoding_S3 dataset.id=S3
+python run/train.py dataset.task=listening_final training.num_train_epochs=100
+```
+
+## Data Notes
+
+- **Raw sEEG data is not bundled** in this repository.
+- The repository includes only a small **demo text corpus** at `data/demo_corpus_for_post_training.json`.
+- Generated experiment outputs under `src/llm/LLaMA-Factory/outputs/` are ignored from version control.
+
+## Acknowledgements
+
+This repository builds on or references the following projects:
+
+- [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory)
+- [NeuroSketch](https://github.com/Galaxy-Dawn/NeuroSketch)
+- [ModernTCN](https://github.com/luodhhh/ModernTCN)
+- [MedFormer](https://github.com/DL4mHealth/Medformer)
+- [MultiResGRU](https://www.kaggle.com/competitions/tlvmc-parkinsons-freezing-gait-prediction/writeups/zinxira-4th-place-solution-a-multilayer-bidirectio)
+
+## Citation
+
+If this repository is useful in your research, please cite the corresponding paper or project page when it is publicly available.
