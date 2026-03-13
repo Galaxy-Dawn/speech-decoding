@@ -13,6 +13,11 @@
 
 </div>
 
+## News
+
+- **2026-03-13**: Repository polished for open-source release — anonymized subject identifiers, removed local-path leakage, enabled GitHub Discussions, and added bilingual README support.
+- **2026-03-13**: Updated repository presentation to align with the paper title **Towards Unified Brain-to-Text Decoding Across Speech Production and Perception**.
+
 ## Overview
 
 This repository contains the codebase for **Towards Unified Brain-to-Text Decoding Across Speech Production and Perception**.

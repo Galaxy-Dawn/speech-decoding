@@ -13,6 +13,11 @@
 
 </div>
 
+## News
+
+- **2026-03-13**：仓库已按开源发布标准完成整理——匿名化被试编号、清理本地路径泄露、开启 GitHub Discussions，并补充中英文 README。
+- **2026-03-13**：仓库标题与说明已统一到论文 **Towards Unified Brain-to-Text Decoding Across Speech Production and Perception**。
+
 ## 项目简介
 
 本仓库是论文 **Towards Unified Brain-to-Text Decoding Across Speech Production and Perception** 的代码实现。
