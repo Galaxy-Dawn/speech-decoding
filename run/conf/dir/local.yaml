@@ -1,0 +1,10 @@
+project_dir: /Speech_Decoding #Project root directory - Stores the code for the entire speech decoding project
+data_dir: #Raw data directory - Contains unprocessed sEEG neural signal data files
+processed_dir: #Processed data directory - Stores data after preprocessing steps
+logging_dir: #Logging directory - Records training processes, model runtime status, error information for debugging and monitoring purposes
+model_save_dir: #Model save directory - Saves trained brain decoders' checkpoints
+llm_data_dir: Speech_Decoding/data #LLM training data directory - Contains text datasets for training large language models
+llm_save_dir: #LLM save directory - Stores trained LLM weights
+llm_utils_dir: #LLM utility resources directory - Contains auxiliary resources such as vocabulary files and lexicons
+llm_inference_result_dir: #LLM inference result directory - Saves prediction output results from the language model inference process
+analyze_result_dir: #Analysis result directory - Directory for storing analysis results

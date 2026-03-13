@@ -1,0 +1,5 @@
+name: MultiResGRU
+hidden_size: 512
+n_layers: 3
+bidir: True
+tta_times: 3

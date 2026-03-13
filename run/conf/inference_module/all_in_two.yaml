@@ -1,0 +1,20 @@
+defaults:
+  - _self_
+  - dir: local
+
+name: all_in_two
+
+listwise:
+  input_path: ${dir.llm_data_dir}/speech_decoding_inference_all_in_two_listwise_${test.subject}_${test.state}_input.json
+  dataset_name: speech_decoding_inference_all_in_two_listwise_${test.subject}_${test.state}_input
+  model_name: Qwen7B_correction
+  model_path: ${dir.llm_save_dir}/${inference_module.listwise.model_name}/lora
+  output_path: ${dir.llm_save_dir}/${inference_module.listwise.model_name}/speech_decoding_inference_all_in_two_listwise_${test.subject}_${test.state}_output
+
+correction:
+  is_permutation: False
+  input_path: ${dir.llm_data_dir}/speech_decoding_inference_all_in_two_correction_${test.subject}_${test.state}_input.json
+  dataset_name: speech_decoding_inference_all_in_two_correction_${test.subject}_${test.state}_input
+  model_name: Qwen7B_correction
+  model_path: ${dir.llm_save_dir}/${inference_module.correction.model_name}/lora
+  output_path: ${dir.llm_save_dir}/${inference_module.correction.model_name}/speech_decoding_inference_all_in_two_correction_${test.subject}_${test.state}_output

@@ -1,0 +1,56 @@
+hydra:
+  job:
+    name: test
+    chdir: true
+  run:
+    dir: ${dir.output_dir}/${hydra.job.name}/${wandb.exp_name}
+  sweep:
+    dir: ${dir.output_dir}/sweep/
+
+defaults:
+  - _self_
+  - dir: local
+  - model: NeuroSketch
+  - dataset: speech_decoding_S1
+  - inference_module: all_in_two
+
+test:
+  seed: 42
+  gpu_id: 0
+  data_root: ${dir.data_dir}
+  subject: ${dataset.id}
+  save_directory: processed_data
+  state: speaking
+  test_type: test_sen
+  method: if
+  decode_with_tone: False
+  batch_size: 128
+
+  initial_checkpoints:
+    - ${dir.model_save_dir}/${model.name}_${dataset.id}_${test.state}_initial/pytorch_model.bin
+  final_checkpoints:
+    - ${dir.model_save_dir}/${model.name}_${dataset.id}_${test.state}_final/pytorch_model.bin
+  tone_checkpoints:
+    - ${dir.model_save_dir}/${model.name}_${dataset.id}_${test.state}_tone/pytorch_model.bin
+
+  model_weight: [1.0]
+  is_extra_lexicon: False
+  top_k: 50
+  beam_size: 100
+  sentence_candidate: 20
+  sentence_txt_path: ${dir.data_dir}/${dataset.id}/test_sen.txt
+  save_label_path: ${dir.data_dir}/${dataset.id}/processed_data/sentence/sentence_label_${test.state}.pkl
+  save_logits_version: 'all_selected_channels'
+
+beam_search:
+  output_path: ${dir.llm_inference_result_dir}/${dataset.id}_${test.state}_${model.name}_seed_${test.seed}/beam_search_results.pkl
+
+results:
+  initial_final_results_path: ${dir.llm_inference_result_dir}/initial_final_results_${dataset.id}_${test.state}_${model.name}_seed_${test.seed}.json
+  beam_search_results_path: ${dir.llm_inference_result_dir}/beam_search_results_${dataset.id}_${test.state}_${model.name}_seed_${test.seed}.json
+  total_results_path: ${dir.llm_inference_result_dir}/total_results_${dataset.id}_${test.state}_${model.name}_seed_${test.seed}.json
+
+wandb:
+  project_name: Speech_Decoding
+  exp_name: exp_1
+  group_name: default

@@ -1,0 +1,12 @@
+name: MedFormer
+no_inter_attn: False
+output_attention: False
+single_channel: False
+patch_len_list: 5,10,20,50
+d_model: 384
+dropout: 0.0
+n_heads: 8
+d_ff: 768
+activation: relu
+e_layers: 6
+tta_times: 3

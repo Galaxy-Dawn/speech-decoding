@@ -1,0 +1,26 @@
+hydra:
+  job:
+    name: prepare_data
+    chdir: true
+  run:
+    dir: ${dir.output_dir}/${hydra.job.name}/${hydra.job.override_dirname}
+  sweep:
+    dir: ${dir.output_dir}/${hydra.job.name}/
+    subdir: ${hydra.job.override_dirname}
+  sweeper:
+    params:
+      dataset: speech_decoding_S1,speech_decoding_S2,speech_decoding_S3,speech_decoding_S4,speech_decoding_S5,speech_decoding_S6,speech_decoding_S7,speech_decoding_S8,speech_decoding_S9,speech_decoding_S10,speech_decoding_S11,speech_decoding_S12
+      dataset.task: speaking_initial,speaking_final,listening_initial,listening_final
+
+defaults:
+  - _self_
+  - dir: local
+  - dataset: speech_decoding_S1
+
+split_method: simple
+train_ratio: 0.8
+eval_ratio: 0.2
+test_ratio: 0.0
+random_seed: 42
+stratify_flag: True
+max_workers: 1

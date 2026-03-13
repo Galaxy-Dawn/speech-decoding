@@ -1,0 +1,30 @@
+defaults:
+  - _self_
+  - dir: local
+
+id: subject_id
+name: speech_decoding_${.id}
+task: speaking_initial
+input_channels: num_channels
+
+target_size:
+  speaking_initial: 11
+  speaking_final: 15
+  speaking_tone: 4
+  listening_initial: 11
+  listening_final: 15
+  listening_tone: 4
+
+seq_len:
+  speaking_initial: 2500
+  speaking_final: 2500
+  speaking_tone: 2500
+  listening_initial: 1000
+  listening_final: 1000
+  listening_tone: 1000
+
+test_type: 'test_character'
+use_auditory_cortex_channels: False
+channel_dict_path: ${dir.data_dir}/${.id}/ch_dict.pkl
+channel_index_name: "all"
+split_method: simple

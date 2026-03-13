@@ -1,0 +1,77 @@
+hydra:
+  job:
+    name: train
+    chdir: true
+  run:
+    dir: ${dir.output_dir}/${hydra.job.name}/${swanlab.exp_name}
+  sweep:
+    dir: ${dir.output_dir}/sweep/
+    subdir: ${swanlab.exp_name}
+  sweeper:
+    params:
+      dataset.id: 7,8,10
+
+defaults:
+  - _self_
+  - dir: local
+  - model: NeuroSketch  #ModernTCN, MedFormer, MultiResGRU
+  - dataset: speech_decoding_S1
+
+augmentation:
+  random_shift_prob: 0.5
+  shift_ratio: 0.1
+  add_noise_prob: 0.1
+  ChannelMasking_prob: 0.5
+  TimeMasking_prob: 0.5
+  mixup_prob: 0.5
+
+swanlab:
+  project_name: Speech_Decoding
+  exp_name: exp_1
+  group_name: default
+
+training:
+  suffix:
+  get_chance_level: False
+  gpu_id: 1
+  seed: 42
+  do_train: True
+  do_eval: True
+  do_predict: True
+  overwrite_output_dir: True
+  num_train_epochs: 500
+  learning_rate: 3e-4
+  learning_rate_muon: 3e-4
+  min_learning_rate: 0
+  warmup_ratio: 0.1
+  optimizer: 'muon'
+  lr_scheduler_type: 'cosine'
+  weight_decay: 0.05
+  swa_start: 50
+  swa_freq: 1
+  save_start_epoch: -1
+  save_end_epoch: -1
+  save_freq: 1
+  ema_decay: 0.9
+  agg_start_epoch: -1
+  agg_end_epoch: -1
+  agg_freq: 1
+  top_k_per_fold: 10
+  evaluation_strategy: "steps" #"no" #"steps"
+  eval_steps: 0.05
+  save_strategy: "steps" #"no" #"steps"
+  save_steps: 0.05
+  save_total_limit: 5
+  early_stopping_patience: 10000
+  per_device_train_batch_size: 64
+  per_device_eval_batch_size: 128
+  dataloader_num_workers: 1
+  logging_dir: "./logs"
+  logging_first_step: True
+  logging_strategy: "epoch"
+  logging_steps: 10
+  load_best_model_at_end: True
+  metric_for_best_model: "top1_accuracy"
+  greater_is_better: True
+  remove_unused_columns: False
+  dataloader_pin_memory: True

@@ -1,0 +1,23 @@
+name: ModernTCN
+downsample_ratio: 1
+ffn_ratio: 4
+num_blocks: [3, 3, 3]
+large_size: [21, 17, 13]
+small_size: [5, 5, 5]
+dims: [32, 64, 128]
+small_kernel_merged: false
+dropout: 0.0
+head_dropout: 0.0
+drop_backbone: 0.0
+drop_head: 0.0
+use_multi_scale: false
+revin: true
+affine: true
+subtract_last: false
+individual: false
+kernel_size: 5
+patch_size: 50
+patch_stride: 50
+# classification
+class_dropout: 0.0
+tta_times: 3

@@ -1,0 +1,18 @@
+defaults:
+  - _self_
+  - dir: local
+  - model: NeuroSketch
+  - dataset: speech_decoding_S1
+
+rank:
+  seed: 42
+  suffix:
+  data_source: sentence
+  state: speaking
+  inference_batch_size: 8
+  initial_checkpoint: ${dir.model_save_dir}/${model.name}_${dataset.id}_${state}_initial/pytorch_model.bin
+  final_checkpoint: ${dir.model_save_dir}/${model.name}_${dataset.id}_${state}_final/pytorch_model.bin
+
+response_latency:
+  data_source: character
+  maxlag: 500

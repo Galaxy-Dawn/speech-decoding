@@ -1,0 +1,61 @@
+defaults:
+  - _self_
+  - dir: local
+
+system_prompt_translation: "## 角色
+你是一名语言转换专家，专门将无声调的拼音序列翻译为准确的中文句子。每个拼音音节对应一个汉字，你必须确保精确匹配，如果有标点符号遗漏，你需要按照语义进行修正。
+## 示例
+1.拼音序列：jin tian tian qi bu cuo，中文语句：今天天气不错。
+2.拼音序列：wo zhun bei qu chi wu fan，中文语句：我准备去吃午饭。
+3.拼音序列：ming tian wo yao qu pa shan ni qu ma，中文语句：明天我要去爬山，你去吗？
+## 约束
+- 仅专注于将拼音序列翻译为汉字。
+- 保持拼音音节与汉字之间的严格对应关系。
+- 直接输出最后的中文语句，要求句子清晰连贯。"
+
+system_prompt_listwise: "## 角色
+你是一个专业高效的拼音序列排序专家，专注于从20个选项(A-T)中快速准确地识别出最通顺的三个拼音序列组合。
+## 技能
+1. 当接收到20个不同的拼音序列选项（选项从A到T）时，运用丰富的语言经验和专业知识，全面分析每个选项通过拼音到汉字的翻译，组成通顺语句的可能性。
+2. 从这些选项中精心挑选出最可能组成通顺语句的三个选项，根据通顺度对选项进行优先级排序，对同等通顺度的选项按字母顺序排列。
+## 限制:
+- 直接输出排序题的答案，答案必须为3个英文字母。
+- 所输出的内容必须按照给定的格式进行组织，绝不能偏离框架要求。"
+
+system_prompt_correction: "## 角色											
+你是一位专业严谨的拼音纠错推理大师，擅长通过无声调拼音序列推理出正确的中文语句。你的任务是：1.分析输入的拼音序列（可能包含错误）；2.通过语境、语法和常见表达习惯进行逻辑推理；3.输出最合理通顺的中文句子。															
+## 限制:											
+- 不要显式输出详细的推理过程。最后直接输出正确句子。											
+- 输出的内容需符合中文语言表达习惯和逻辑。"
+
+all_syllables: ["a", "ai", "an", "ang", "ao", "ba", "bai", "ban", "bang", "bao", "bei", "ben", "beng", "bi",
+                 "bian", "biao", "bie", "bin", "bing", "bo", "bu", "ca", "cai", "can", "cang", "cao", "ce", "cen", "ceng",
+                 "cha", "chai", "chan", "chang", "chao", "che", "chen", "cheng", "chi", "chong", "chou", "chu",
+                 "chua", "chuai", "chuan", "chuang", "chui", "chun", "chuo", "ci", "cong", "cou", "cu", "cuan", "cui",
+                 "cun", "cuo", "da", "dai", "dan", "dang", "dao", "de", "dei", "den", "deng", "di", "dian", "diang",
+                 "diao", "die", "ding", "diu", "dong", "dou", "du", "duan", "dui", "dun", "duo", "e", "ê", "ei", "en",
+                 "eng", "er", "fa", "fan", "fang", "fei", "fen", "feng", "fo", "fou", "fu", "ga", "gai", "gan", "gang",
+                 "gao", "ge", "gei", "gen", "geng", "gong", "gou", "gu", "gua", "guai", "guan", "guang", "gui", "gun",
+                 "guo", "ha", "hai", "han", "hang", "hao", "he", "hei", "hen", "heng", "hong", "hou", "hu", "hua", "huai",
+                 "huan", "huang", "hui", "hun", "huo", "ji", "jia", "jian", "jiang", "jiao", "jie", "jin", "jing",
+                 "jiong", "jiu", "ju", "juan", "jue", "jun", "ka", "kai", "kan", "kang", "kao", "ke", "kei", "ken",
+                 "keng", "kong", "kou", "ku", "kua", "kuai", "kuan", "kuang", "kui", "kun", "kuo", "la", "lai",
+                 "lan", "lang", "lao", "le", "lei", "leng", "li", "lia", "lian", "liang", "liao", "lie", "lin", "ling",
+                 "liu", "lo", "long", "lou", "lu", "lü", "luan", "lüan", "lüe", "lun", "lün", "luo", "ma", "mai", "man",
+                 "mang", "mao", "me", "mei", "men", "meng", "mi", "mian", "miao", "mie", "min", "ming", "miu", "mo",
+                 "mou", "mu", "na", "nai", "nan", "nang", "nao", "ne", "nei", "nen", "neng", "ni", "nia", "nian",
+                 "niang", "niao", "nie", "nin", "ning", "niu", "nong", "nou", "nu", "nü", "nuan", "nüe", "nun",
+                 "nuo", "o", "ou", "pa", "pai", "pan", "pang", "pao", "pei", "pen", "peng", "pi", "pian", "piao", "pie",
+                 "pin", "ping", "po", "pou", "pu", "qi", "qia", "qian", "qiang", "qiao", "qie", "qin", "qing", "qiong",
+                 "qiu", "qu", "quan", "que", "qun", "ran", "rang", "rao", "re", "ren", "reng", "ri", "rong", "rou", "ru",
+                 "ruan", "rui", "run", "ruo", "sa", "sai", "san", "sang", "sao", "se", "sei", "sen", "seng", "sha",
+                 "shai", "shan", "shang", "shao", "she", "shei", "shen", "sheng", "shi", "shong", "shou", "shu",
+                 "shua", "shuai", "shuan", "shuang", "shui", "shun", "shuo", "si", "song", "sou", "su", "suan", "sui",
+                 "sun", "suo", "ta", "tai", "tan", "tang", "tao", "te", "tei", "teng", "ti", "tian", "tiao", "tie", "ting",
+                 "tong", "tou", "tu", "tuan", "tui", "tun", "tuo", "wa", "wai", "wan", "wang", "wei", "wen", "weng",
+                 "wo", "wu", "xi", "xia", "xian", "xiang", "xiao", "xie", "xin", "xing", "xiong", "xiu", "xu",
+                 "xuan", "xue", "xun", "ya", "yan", "yang", "yao", "ye", "yi", "yin", "ying", "yong", "you", "yu", "yuan",
+                 "yue", "yun", "za", "zai", "zan", "zang", "zao", "ze", "zei", "zen", "zeng", "zha", "zhai", "zhan",
+                 "zhang", "zhao", "zhe", "zhei", "zhen", "zheng", "zhi", "zhong", "zhou", "zhu", "zhua", "zhuai",
+                 "zhuan", "zhuang", "zhui", "zhun", "zhuo", "zi", "zong", "zou", "zu", "zuan", "zui", "zun",
+                 "zuo"]
