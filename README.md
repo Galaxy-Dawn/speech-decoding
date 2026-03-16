@@ -285,4 +285,16 @@ This repository builds on or references the following projects:
 
 ## Citation
 
-If this repository is useful in your research, please cite the corresponding paper or project page when it is publicly available.
+If you use this repository in your research, please cite our arXiv preprint:
+
+```bibtex
+@misc{yuan2026unifiedbraintotextdecodingspeech,
+      title={Towards unified brain-to-text decoding across speech production and perception},
+      author={Zhizhang Yuan and Yang Yang and Gaorui Zhang and Baowen Cheng and Zehan Wu and Yuhao Xu and Xiaoying Liu and Liang Chen and Ying Mao and Meng Li},
+      year={2026},
+      eprint={2603.12628},
+      archivePrefix={arXiv},
+      primaryClass={q-bio.NC},
+      url={https://arxiv.org/abs/2603.12628},
+}
+```

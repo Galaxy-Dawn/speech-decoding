@@ -285,4 +285,16 @@ python run/train.py dataset.task=listening_final training.num_train_epochs=100
 
 ## 引用
 
-如果这个仓库对你的研究有帮助，请在论文或项目页面公开后引用对应成果。
+如果这个仓库对你的研究有帮助，请引用我们的 arXiv 预印本：
+
+```bibtex
+@misc{yuan2026unifiedbraintotextdecodingspeech,
+      title={Towards unified brain-to-text decoding across speech production and perception},
+      author={Zhizhang Yuan and Yang Yang and Gaorui Zhang and Baowen Cheng and Zehan Wu and Yuhao Xu and Xiaoying Liu and Liang Chen and Ying Mao and Meng Li},
+      year={2026},
+      eprint={2603.12628},
+      archivePrefix={arXiv},
+      primaryClass={q-bio.NC},
+      url={https://arxiv.org/abs/2603.12628},
+}
+```
