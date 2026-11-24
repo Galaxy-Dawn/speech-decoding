@@ -283,6 +283,10 @@ This repository builds on or references the following projects:
 - [MedFormer](https://github.com/DL4mHealth/Medformer)
 - [MultiResGRU](https://www.kaggle.com/competitions/tlvmc-parkinsons-freezing-gait-prediction/writeups/zinxira-4th-place-solution-a-multilayer-bidirectio)
 
+## License
+
+Project-authored code is licensed under [Apache-2.0](LICENSE).
+
 ## Citation
 
 If you use this repository in your research, please cite our arXiv preprint:

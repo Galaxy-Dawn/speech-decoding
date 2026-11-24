@@ -283,6 +283,10 @@ python run/train.py dataset.task=listening_final training.num_train_epochs=100
 - [MedFormer](https://github.com/DL4mHealth/Medformer)
 - [MultiResGRU](https://www.kaggle.com/competitions/tlvmc-parkinsons-freezing-gait-prediction/writeups/zinxira-4th-place-solution-a-multilayer-bidirectio)
 
+## 许可证
+
+本项目自有代码采用 [Apache-2.0](LICENSE) 许可。
+
 ## 引用
 
 如果这个仓库对你的研究有帮助，请引用我们的 arXiv 预印本：
